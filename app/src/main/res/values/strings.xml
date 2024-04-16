@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Foodie Friends</string>
+    <string name="main">Main</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="login">Login</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signup">Sign Up</string>
+    <string name="welcome">Welcome!</string>
+    <string name="my_recipes">My Recipes</string>
+    <string name="discover">Discover Recipes</string>
+    <string name="user_profile">User Profile</string>
+    <string name="setting">Settings</string>
+</resources>

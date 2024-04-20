@@ -4,25 +4,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.foodiefriends.AppState
 import com.example.foodiefriends.ScreenRoutes
-import com.example.foodiefriends.TopBarRow
 import com.example.foodiefriends.ui.dashboard.DashboardScreen
 import com.example.foodiefriends.ui.discover.DiscoverScreen
 import com.example.foodiefriends.ui.login.LoginScreen
 import com.example.foodiefriends.ui.login.SignupScreen
 import com.example.foodiefriends.ui.main.MainScreen
+import com.example.foodiefriends.ui.recipe.RecipeDestination
+import com.example.foodiefriends.ui.recipe.RecipeScreen
 import com.example.foodiefriends.ui.settings.SettingsScreen
-import com.example.foodiefriends.ui.user.UserDestination
 import com.example.foodiefriends.ui.user.UserScreen
 
 @Composable
 fun AppNavHost(
 	appState: AppState
 ) {
-	Scaffold{ padding ->
+	Scaffold { padding ->
 		NavHost(
 			navController = appState.navController,
 			startDestination = ScreenRoutes.Main.route,
@@ -34,8 +36,21 @@ fun AppNavHost(
 				})
 			}
 
+			composable(
+				// "recipe/{recipeId}"
+				route = RecipeDestination.routeWithArgs,
+				arguments = listOf(
+					// "recipeId"
+					navArgument(RecipeDestination.recipeIdArgs) {
+						// recipeId is type Int
+						type = NavType.IntType
+					})
+			) {
+				RecipeScreen()
+			}
+
 			composable(ScreenRoutes.Dashboard.route) {
-				DashboardScreen()
+				DashboardScreen(appState = appState)
 			}
 
 			composable(ScreenRoutes.Auth.Login.route) {
@@ -51,19 +66,19 @@ fun AppNavHost(
 			}
 
 			composable(ScreenRoutes.Dashboard.route) {
-				DashboardScreen()
+				DashboardScreen(appState = appState)
 			}
 
-			composable(ScreenRoutes.User.route){
+			composable(ScreenRoutes.User.route) {
 				UserScreen()
 			}
 
-			composable(ScreenRoutes.Settings.route){
+			composable(ScreenRoutes.Settings.route) {
 				SettingsScreen(appState = appState)
 			}
 
-			composable(ScreenRoutes.Discover.route){
-				DiscoverScreen()
+			composable(ScreenRoutes.Discover.route) {
+				DiscoverScreen(appState = appState)
 			}
 		}
 	}

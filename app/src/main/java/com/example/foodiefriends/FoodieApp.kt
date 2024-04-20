@@ -1,9 +1,11 @@
 package com.example.foodiefriends
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Settings
@@ -21,13 +23,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.foodiefriends.ui.dashboard.DashboardDestination
+import com.example.foodiefriends.ui.reusables.RecipeSearchBar
 
 @Composable
 fun rememberAppState(navController: NavHostController = rememberNavController()) =
@@ -47,6 +53,7 @@ class AppState(
 	}
 
 	private val routes = BottomBarRoutes.entries.map { it.route }
+	private val searchBarRoutes = SearchBarRoutes.entries.map { it.route }
 	private val authRoute = AuthRoutes.entries.map { it.route }
 
 	val shouldBottomBarShow: Boolean
@@ -58,6 +65,9 @@ class AppState(
 
 	val shouldShowBackButton: Boolean
 		@Composable get() = navController.currentBackStackEntryAsState().value?.destination?.route == ScreenRoutes.Settings.route
+
+	val shouldShowSearchBar: Boolean
+		@Composable get() = navController.currentBackStackEntryAsState().value?.destination?.route in searchBarRoutes
 }
 
 @Composable
@@ -65,7 +75,7 @@ fun BottomBarRow(
 	navController: NavHostController,
 ) {
 	val tabList = listOf(
-		BottomBarRoutes.RECIPES,
+		BottomBarRoutes.DASHBOARD,
 		BottomBarRoutes.DISCOVER,
 	)
 	val navStackBackEntry by navController.currentBackStackEntryAsState()
@@ -116,10 +126,25 @@ fun BottomBarItems(
 fun TopBarRow(
 	title: String = stringResource(id = R.string.app_name),
 	appState: AppState,
+	discoverGetRecipes: (String) -> Unit = {},
+	dashboardGetRecipes: (String) -> Unit = {}
 ) {
 	val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 	CenterAlignedTopAppBar(
-		title = { Text(text = title) },
+		modifier = Modifier
+			.background(Color.White)
+			.padding(0.dp, 4.dp),
+		title = {
+			if (appState.shouldShowSearchBar) {
+				if (appState.navController.currentDestination?.route == DashboardDestination.route) {
+					RecipeSearchBar(dashboardGetRecipes)
+				} else {
+					RecipeSearchBar(discoverGetRecipes)
+				}
+			} else {
+				Text(text = title)
+			}
+		},
 		navigationIcon = {
 			if (appState.shouldShowBackButton) {
 				IconButton(onClick = {
@@ -144,7 +169,6 @@ fun TopBarRow(
 			}
 		},
 		colors = TopAppBarDefaults.topAppBarColors(
-			containerColor = MaterialTheme.colorScheme.primaryContainer,
 			titleContentColor = MaterialTheme.colorScheme.primary,
 		),
 		scrollBehavior = scrollBehavior

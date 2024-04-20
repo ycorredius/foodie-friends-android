@@ -35,9 +35,6 @@ class MainActivity : ComponentActivity() {
 					color = MaterialTheme.colorScheme.background
 				) {
 					Scaffold(
-						topBar = {
-							if (appState.shouldShowTopBar) TopBarRow(appState = appState)
-						},
 						bottomBar = {
 							if (appState.shouldBottomBarShow) BottomAppBar(
 								containerColor = MaterialTheme.colorScheme.primaryContainer,

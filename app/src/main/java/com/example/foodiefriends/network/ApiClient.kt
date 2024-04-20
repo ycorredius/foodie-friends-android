@@ -1,7 +1,7 @@
 package com.example.foodiefriends.network
 
 import android.content.Context
-import com.example.foodiefriends.data.RecipeResponse
+import com.example.foodiefriends.data.RecipeListResponse
 import com.example.foodiefriends.headerValue
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -21,12 +21,12 @@ import javax.inject.Singleton
 @Singleton
 class ApiClient @Inject constructor() {
 	companion object {
-		private const val HOST_LOCAL = "http://10.0.2.2:3000/api/v1/"
-		private val DISPATCHER = Dispatcher().apply { maxRequests = 1 }
+		private const val HOST_LOCAL = "http://192.168.1.149:3000/api/v1/"
+		private val DISPATCHER = Dispatcher().apply { maxRequests = 21 }
 	}
 
 	private val gson: Gson = GsonBuilder()
-		.registerTypeAdapter(RecipeResponse::class.java, RecipeResponseSerializer())
+		.registerTypeAdapter(RecipeListResponse::class.java, RecipeResponseSerializer())
 		.create()
 
 	fun getClient(context: Context, includeHeaders: Boolean = true): Retrofit {
@@ -48,6 +48,8 @@ class ApiClient @Inject constructor() {
 	) : Interceptor {
 		override fun intercept(chain: Interceptor.Chain): Response {
 			val request = chain.request()
+			request.newBuilder().header("Cache-Control", "public, max-age" + 60 * 60 * 24 * 7)
+				.build()
 			val authenticatedRequest = request.newBuilder()
 				.header("Authorization", headerValue(context)).build()
 			return chain.proceed(authenticatedRequest)
@@ -55,9 +57,9 @@ class ApiClient @Inject constructor() {
 	}
 }
 
-class RecipeResponseSerializer : JsonSerializer<RecipeResponse> {
+class RecipeResponseSerializer : JsonSerializer<RecipeListResponse> {
 	override fun serialize(
-		recipe: RecipeResponse,
+		recipe: RecipeListResponse,
 		type: Type,
 		context: JsonSerializationContext
 	): JsonElement {

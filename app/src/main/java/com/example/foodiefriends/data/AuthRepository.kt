@@ -26,7 +26,12 @@ class AuthRepository @Inject constructor(
 			if (response.isSuccessful) {
 				response.body()?.let {
 					sharedPrefs.putString(Key.accessToken, it.token)
-					sharedPrefs.putString(Key.userPhoto, it.user.data.attributes.avatar)
+					it.user.data.attributes.avatar?.let { avatarUrl ->
+						sharedPrefs.putString(
+							Key.userPhoto,
+							avatarUrl
+						)
+					}
 					sharedPrefs.putString(Key.userName, it.user.data.attributes.name)
 					sharedPrefs.putString(Key.userEmail, it.user.data.attributes.email)
 				}
@@ -51,13 +56,13 @@ class AuthRepository @Inject constructor(
 				}
 			}
 			response
-		} catch (e: HttpException){
+		} catch (e: HttpException) {
 			Log.e("AuthRepoLoginError", "Something went wrong trying to login", e)
 			null
 		}
 	}
 
-	fun logout(){
+	fun logout() {
 		sharedPrefs.putString(Key.accessToken, "")
 		sharedPrefs.putString(Key.userPhoto, "")
 		sharedPrefs.putString(Key.userName, "")

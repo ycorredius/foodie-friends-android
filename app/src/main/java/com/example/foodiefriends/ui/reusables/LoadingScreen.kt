@@ -55,3 +55,21 @@ fun ErrorScreen(
 		}
 	}
 }
+
+@Composable
+fun UnavailableNetwork(){
+	Column(
+		modifier = Modifier.fillMaxSize(),
+		verticalArrangement = Arrangement.Center,
+		horizontalAlignment = Alignment.CenterHorizontally,
+	) {
+
+		Icon(
+			painter = painterResource(id = R.drawable.offline),
+			contentDescription = "offline Svg",
+			tint = MaterialTheme.colorScheme.surfaceTint
+		)
+		Spacer(modifier = Modifier.height(20.dp))
+		Text(text = "Network unavailable")
+	}
+}

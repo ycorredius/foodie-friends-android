@@ -1,6 +1,5 @@
 package com.example.foodiefriends
 
-import android.net.Network
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -41,7 +40,7 @@ class MainActivity : ComponentActivity() {
 			FoodieFriendsTheme {
 				val appState = rememberAppState()
 				val connectionStatus by rememberConnectionStatus()
-				val isConnected by remember(connectionStatus){
+				val isConnected by remember(connectionStatus) {
 					derivedStateOf { connectionStatus == ConnectionStatus.Available }
 				}
 
@@ -67,7 +66,7 @@ class MainActivity : ComponentActivity() {
 								AppNavHost(appState)
 							}
 						}
-					} else{
+					} else {
 						UnavailableNetwork()
 					}
 				}

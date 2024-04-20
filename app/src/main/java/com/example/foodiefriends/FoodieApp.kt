@@ -115,7 +115,7 @@ fun BottomBarItems(
 		//TODO: For user profile change to be image if there is one available. Potential save it to local store to prevent unnecessary calls to api.
 		Icon(
 			painter = painterResource(id = tab.icon),
-			contentDescription = tab.route,
+			contentDescription = stringResource(id = tab.title),
 			tint = contentColor,
 		)
 	}

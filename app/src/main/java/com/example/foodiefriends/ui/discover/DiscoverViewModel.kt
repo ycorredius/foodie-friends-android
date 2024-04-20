@@ -32,7 +32,7 @@ class DiscoverViewModel @Inject constructor(
 	suspend fun getRecipes(name: String = "") {
 		delay(3_000L)
 		_uiState.value = DiscoverRecipeUiState.Loading
-		val result = recipeRepository.getUserRecipes(name)
+		val result = recipeRepository.getRecipes(name)
 
 		_uiState.value = if (result.recipes.isNotEmpty()) {
 			printMsg("@@@@ Server offline error: $result")

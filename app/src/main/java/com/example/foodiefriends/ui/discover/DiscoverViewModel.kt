@@ -41,10 +41,6 @@ class DiscoverViewModel @Inject constructor(
 			DiscoverRecipeUiState.Error(result.error)
 		}
 	}
-
-	fun setRecipeData(recipe: Recipe) {
-		recipeRepository.updateRecipe(recipe)
-	}
 }
 
 sealed interface DiscoverRecipeUiState {

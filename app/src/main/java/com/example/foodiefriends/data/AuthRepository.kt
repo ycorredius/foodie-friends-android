@@ -68,8 +68,4 @@ class AuthRepository @Inject constructor(
 		sharedPrefs.putString(Key.userName, "")
 		sharedPrefs.putString(Key.userEmail, "")
 	}
-
-	companion object {
-		val ACCESS_TOKEN = stringPreferencesKey("accessToken")
-	}
 }

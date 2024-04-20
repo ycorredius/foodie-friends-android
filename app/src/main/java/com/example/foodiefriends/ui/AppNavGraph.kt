@@ -1,5 +1,7 @@
 package com.example.foodiefriends.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -20,6 +22,7 @@ import com.example.foodiefriends.ui.recipe.RecipeScreen
 import com.example.foodiefriends.ui.settings.SettingsScreen
 import com.example.foodiefriends.ui.user.UserScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavHost(
 	appState: AppState

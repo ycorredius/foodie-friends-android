@@ -2,7 +2,6 @@ package com.example.foodiefriends.ui.discover
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foodiefriends.data.Recipe
 import com.example.foodiefriends.data.RecipeRepository
 import com.example.foodiefriends.printMsg
 import com.example.foodiefriends.ui.Errors

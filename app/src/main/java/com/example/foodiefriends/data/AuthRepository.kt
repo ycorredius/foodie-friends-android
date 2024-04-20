@@ -3,7 +3,6 @@ package com.example.foodiefriends.data
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.foodiefriends.Key
 import com.example.foodiefriends.network.AuthService
 import com.example.foodiefriends.printMsg

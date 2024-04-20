@@ -15,12 +15,6 @@ class RecipeRepository(
 	private var recipeData: MutableStateFlow<Recipe> = MutableStateFlow(Recipe())
 
 	//TODO: Figure out best way to cache recipes in order not to call too many times.
-
-	fun updateRecipe(recipe: Recipe) {
-		printMsg("@@@ Setting this recipe: $recipe")
-		recipeData.value = recipe
-	}
-
 	suspend fun getUserRecipes(name: String = ""): RecipesUiState {
 		val recipeUiState = RecipesUiState()
 		return try {

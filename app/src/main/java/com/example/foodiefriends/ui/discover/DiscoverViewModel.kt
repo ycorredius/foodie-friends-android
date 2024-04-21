@@ -29,7 +29,6 @@ class DiscoverViewModel @Inject constructor(
 	}
 
 	suspend fun getRecipes(name: String = "") {
-		delay(3_000L)
 		_uiState.value = DiscoverRecipeUiState.Loading
 		val result = recipeRepository.getRecipes(name)
 

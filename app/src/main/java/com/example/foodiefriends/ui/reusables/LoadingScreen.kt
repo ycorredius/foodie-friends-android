@@ -52,6 +52,7 @@ fun ErrorScreen(
 		when (error) {
 			is Errors.ServerError -> Text("Foodie Friend Server is offline!")
 			is Errors.Other -> Text("Testing for Science")
+			is Errors.None -> Text(text = "Something weird happened. Go check it out!")
 		}
 	}
 }
@@ -63,7 +64,6 @@ fun UnavailableNetwork(){
 		verticalArrangement = Arrangement.Center,
 		horizontalAlignment = Alignment.CenterHorizontally,
 	) {
-
 		Icon(
 			painter = painterResource(id = R.drawable.offline),
 			contentDescription = "offline Svg",

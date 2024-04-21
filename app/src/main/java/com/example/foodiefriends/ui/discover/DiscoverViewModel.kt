@@ -32,7 +32,7 @@ class DiscoverViewModel @Inject constructor(
 		_uiState.value = DiscoverRecipeUiState.Loading
 		val result = recipeRepository.getRecipes(name)
 
-		_uiState.value = if (result.recipes.isNotEmpty()) {
+		_uiState.value = if (result.error == Errors.None) {
 			printMsg("@@@@ Server offline error: $result")
 			DiscoverRecipeUiState.Success(result)
 		} else {

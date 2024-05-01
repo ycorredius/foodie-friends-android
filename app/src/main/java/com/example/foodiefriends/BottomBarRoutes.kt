@@ -32,7 +32,7 @@ enum class BottomBarRoutes(
 ) {
 	DASHBOARD(id = 1, R.string.my_recipes, ScreenRoutes.Dashboard.route, R.drawable.book),
 	DISCOVER(id = 2, R.string.discover, ScreenRoutes.Discover.route, R.drawable.find_icon),
-	RECIPE(id = 3, R.string.recipe, ScreenRoutes.Recipe.route, R.drawable.profile_user)
+	USERPROFILE(id = 3, R.string.user_profile, ScreenRoutes.User.route, R.drawable.profile_user)
 }
 
 enum class SearchBarRoutes(

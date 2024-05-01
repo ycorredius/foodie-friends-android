@@ -1,20 +1,30 @@
 package com.example.foodiefriends.data
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
+import com.example.foodiefriends.Key
 import com.example.foodiefriends.SERVER_ERROR
 import com.example.foodiefriends.network.RecipeService
 import com.example.foodiefriends.printMsg
+import com.example.foodiefriends.sharedPrefs
+import com.example.foodiefriends.string
 import com.example.foodiefriends.ui.Errors
 import com.example.foodiefriends.ui.dashboard.RecipesUiState
 import com.example.foodiefriends.ui.recipe.RecipeUiState
+import com.example.foodiefriends.ui.recipe.UserRecipe
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class RecipeRepository(
-	private val recipeService: RecipeService
+	private val recipeService: RecipeService,
+	@ApplicationContext context: Context,
+	private val sharedPrefs: SharedPreferences = sharedPrefs(context)
 ) {
 	private var recipeData: MutableStateFlow<Recipe> = MutableStateFlow(Recipe())
 
-	//TODO: Figure out best way to cache recipes in order not to call too many times.
+	// TODO: Figure out best way to cache recipes in order not to call too many times.
+	// TODO: Implement a service that saves recipes to server and local db.
 	suspend fun getUserRecipes(name: String = ""): RecipesUiState {
 		val recipeUiState = RecipesUiState()
 		return try {
@@ -38,7 +48,6 @@ class RecipeRepository(
 		return try {
 			val results = recipeService.getRecipes(name)
 			if (results.isSuccessful) {
-				printMsg("@@@ Server is offline here: $results")
 				results.body()?.let { recipeResponse ->
 					recipeResponse.data?.let { recipeUiState.recipes = it }
 				}
@@ -50,9 +59,10 @@ class RecipeRepository(
 			recipeUiState
 		}
 	}
-
+	//TODO: I'm not sure what I amd doing here but I know it wrong.
 	suspend fun getRecipeDetails(id: Int): RecipeUiState {
-		val recipeUiState = RecipeUiState()
+		val recipeUiState = RecipeUiState(user = UserRecipe(userName = sharedPrefs.string(Key.userName) ?: "",
+			userPhoto = sharedPrefs.string(Key.userPhoto) ?: ""))
 		return try {
 			val result = recipeService.getRecipeDetails(id)
 			if (result.isSuccessful) {

@@ -20,7 +20,7 @@ import com.example.foodiefriends.ui.main.MainScreen
 import com.example.foodiefriends.ui.recipe.RecipeDestination
 import com.example.foodiefriends.ui.recipe.RecipeScreen
 import com.example.foodiefriends.ui.settings.SettingsScreen
-import com.example.foodiefriends.ui.user.UserScreen
+import com.example.foodiefriends.ui.user.UserProfileScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -49,7 +49,7 @@ fun AppNavHost(
 						type = NavType.IntType
 					})
 			) {
-				RecipeScreen()
+				RecipeScreen(appState = appState)
 			}
 
 			composable(ScreenRoutes.Dashboard.route) {
@@ -73,8 +73,7 @@ fun AppNavHost(
 			}
 
 			composable(ScreenRoutes.User.route) {
-				UserScreen()
-			}
+				UserProfileScreen(appState = appState)			}
 
 			composable(ScreenRoutes.Settings.route) {
 				SettingsScreen(appState = appState)

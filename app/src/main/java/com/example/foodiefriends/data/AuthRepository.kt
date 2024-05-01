@@ -8,6 +8,8 @@ import com.example.foodiefriends.network.AuthService
 import com.example.foodiefriends.printMsg
 import com.example.foodiefriends.putString
 import com.example.foodiefriends.sharedPrefs
+import com.example.foodiefriends.string
+import com.example.foodiefriends.ui.user.Me
 import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.HttpException
 import retrofit2.Response
@@ -59,6 +61,13 @@ class AuthRepository @Inject constructor(
 			Log.e("AuthRepoLoginError", "Something went wrong trying to login", e)
 			null
 		}
+	}
+
+	fun getMe(): Me {
+		return Me(
+			name = sharedPrefs.string(Key.userName),
+			avatarUrl = sharedPrefs.string(Key.userPhoto)
+		)
 	}
 
 	fun logout() {

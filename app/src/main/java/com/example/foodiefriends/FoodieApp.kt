@@ -1,8 +1,8 @@
 package com.example.foodiefriends
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +14,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -23,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -32,8 +30,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.foodiefriends.ui.dashboard.DashboardDestination
-import com.example.foodiefriends.ui.reusables.RecipeSearchBar
 
 @Composable
 fun rememberAppState(navController: NavHostController = rememberNavController()) =
@@ -75,8 +71,8 @@ fun BottomBarRow(
 	navController: NavHostController,
 ) {
 	val tabList = listOf(
-		BottomBarRoutes.DASHBOARD,
 		BottomBarRoutes.DISCOVER,
+		BottomBarRoutes.USERPROFILE
 	)
 	val navStackBackEntry by navController.currentBackStackEntryAsState()
 	val currentDestination = navStackBackEntry?.destination
@@ -126,46 +122,28 @@ fun BottomBarItems(
 fun TopBarRow(
 	title: String = stringResource(id = R.string.app_name),
 	appState: AppState,
-	discoverGetRecipes: (String) -> Unit = {},
-	dashboardGetRecipes: (String) -> Unit = {}
 ) {
 	val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 	CenterAlignedTopAppBar(
-		modifier = Modifier
-			.background(Color.White)
-			.padding(0.dp, 4.dp),
+		modifier = Modifier.padding(0.dp, 20.dp),
 		title = {
-			if (appState.shouldShowSearchBar) {
-				if (appState.navController.currentDestination?.route == DashboardDestination.route) {
-					RecipeSearchBar(dashboardGetRecipes)
-				} else {
-					RecipeSearchBar(discoverGetRecipes)
-				}
-			} else {
-				Text(text = title)
-			}
+
 		},
 		navigationIcon = {
-			if (appState.shouldShowBackButton) {
-				IconButton(onClick = {
-					appState.navController.popBackStack()
-				}) {
-					Icon(
-						imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-						contentDescription = "Navigate back arrow"
-					)
-				}
+			IconButton(onClick = {
+				appState.navController.popBackStack()
+			}) {
+				Icon(
+					imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+					contentDescription = "Navigate back arrow"
+				)
 			}
 		},
 		actions = {
-			IconButton(onClick = {
-				appState.navController.navigate(ScreenRoutes.Settings.route)
-			}) {
-				Icon(
-					Icons.Default.Settings,
-					contentDescription = "Settings button",
-					tint = MaterialTheme.colorScheme.primary
-				)
+			if (appState.navController.currentDestination?.route == ScreenRoutes.User.route) {
+				IconButton(onClick = { appState.navController.navigate(ScreenRoutes.Settings.route) }) {
+					Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings icon")
+				}
 			}
 		},
 		colors = TopAppBarDefaults.topAppBarColors(

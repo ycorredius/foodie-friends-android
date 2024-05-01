@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.foodiefriends.AppState
 import com.example.foodiefriends.R
-import com.example.foodiefriends.TopBarRow
 import com.example.foodiefriends.data.Recipe
 import com.example.foodiefriends.ui.NavigationDestination
 import com.example.foodiefriends.ui.reusables.ErrorScreen
 import com.example.foodiefriends.ui.reusables.LoadingScreen
 import com.example.foodiefriends.ui.reusables.RecipeCard
+import com.example.foodiefriends.ui.reusables.RecipeSearchBar
 import kotlinx.coroutines.launch
 
 object DiscoverDestination : NavigationDestination {
@@ -40,15 +40,8 @@ fun DiscoverScreen(
 ) {
 	val uiState = viewModel.uiState.collectAsState()
 	val coroutine = rememberCoroutineScope()
-	Scaffold(
-		topBar = {
-			if (appState.shouldShowTopBar) TopBarRow(appState = appState, discoverGetRecipes = {
-				coroutine.launch {
-					viewModel.getRecipes(it)
-				}
-			})
-		},
-	) { padding ->
+	val query = viewModel.querySearch.collectAsState()
+	Scaffold { padding ->
 		Column(
 			modifier = Modifier.padding(padding),
 			horizontalAlignment = Alignment.CenterHorizontally
@@ -57,6 +50,12 @@ fun DiscoverScreen(
 				is DiscoverRecipeUiState.Success -> RecipeList(
 					recipes = recipeUiState.recipes.recipes,
 					appState = appState,
+					getRecipe = {
+						coroutine.launch{
+							viewModel.getRecipes(it)}
+						},
+					query = query.value,
+					updateQuery = { viewModel.changeName(it)}
 				)
 
 				is DiscoverRecipeUiState.Loading -> LoadingScreen()
@@ -71,13 +70,19 @@ fun DiscoverScreen(
 fun RecipeList(
 	recipes: List<Recipe>,
 	appState: AppState,
+	getRecipe: (String) -> Unit,
+	query: String,
+	updateQuery: (String) -> Unit
 ) {
-	LazyColumn(
-		contentPadding = PaddingValues(20.dp, 0.dp),
-		verticalArrangement = Arrangement.SpaceAround
-	) {
-		items(recipes) { recipe ->
-			RecipeCard(recipe = recipe, appState = appState)
+	Column(horizontalAlignment = Alignment.CenterHorizontally) {
+		RecipeSearchBar(getRecipes = { getRecipe(it) }, query = query, updateQuery = {updateQuery(it)})
+		LazyColumn(
+			contentPadding = PaddingValues(20.dp, 0.dp),
+			verticalArrangement = Arrangement.SpaceAround
+		) {
+			items(recipes) { recipe ->
+				RecipeCard(recipe = recipe, appState = appState)
+			}
 		}
 	}
 }

@@ -10,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,6 +23,8 @@ class DashboardViewModel @Inject constructor(
 		MutableStateFlow(DashboardUiState.Loading)
 	val uiState: StateFlow<DashboardUiState> = _uiState
 
+	private val _querySearch = MutableStateFlow("")
+	val querySearch: StateFlow<String> = _querySearch.asStateFlow()
 	init {
 		viewModelScope.launch {
 			getRecipes()
@@ -37,11 +41,15 @@ class DashboardViewModel @Inject constructor(
 			DashboardUiState.Error(result.error)
 		}
 	}
+
+	fun changeName(name: String){
+		_querySearch.value = name
+	}
 }
 
 // TODO: Update this sealed interface and the discover view model ui state to be the same. There is no difference between the two.
 sealed interface DashboardUiState {
-	data class Success(val recipes: RecipesUiState) : DashboardUiState
+	data class Success(val recipes: RecipesUiState, val name: String = "") : DashboardUiState
 	data object Loading : DashboardUiState
 	//Set error as string for now. Will revisit what is appropriate error
 	data class Error(val error: Errors) : DashboardUiState

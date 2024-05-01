@@ -44,8 +44,8 @@ object FoodieFriendsModule {
 
 	@Provides
 	@Singleton
-	fun provideRecipeRepository(recipeService: RecipeService): RecipeRepository =
-		RecipeRepository(recipeService)
+	fun provideRecipeRepository(recipeService: RecipeService, @ApplicationContext context: Context): RecipeRepository =
+		RecipeRepository(recipeService, context)
 
 	@Provides
 	@Singleton

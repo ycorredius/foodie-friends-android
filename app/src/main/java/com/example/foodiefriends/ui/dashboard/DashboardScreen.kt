@@ -18,12 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.foodiefriends.AppState
 import com.example.foodiefriends.R
-import com.example.foodiefriends.TopBarRow
 import com.example.foodiefriends.data.Recipe
 import com.example.foodiefriends.ui.NavigationDestination
 import com.example.foodiefriends.ui.reusables.ErrorScreen
 import com.example.foodiefriends.ui.reusables.LoadingScreen
 import com.example.foodiefriends.ui.reusables.RecipeCard
+import com.example.foodiefriends.ui.reusables.RecipeSearchBar
 import kotlinx.coroutines.launch
 
 object DashboardDestination : NavigationDestination {
@@ -39,16 +39,9 @@ fun DashboardScreen(
 	appState: AppState
 ) {
 	val dashboardUiState = dashboardViewModel.uiState.collectAsState()
-	val coroutine = rememberCoroutineScope()
-	Scaffold(
-		topBar = {
-			if (appState.shouldShowTopBar) TopBarRow(appState = appState, dashboardGetRecipes = {
-				coroutine.launch {
-					dashboardViewModel.getRecipes(it)
-				}
-			})
-		},
-	) { padding ->
+	val query = dashboardViewModel.querySearch.collectAsState()
+	Scaffold { padding ->
+		val coroutine = rememberCoroutineScope()
 		Column(
 			modifier = Modifier.padding(padding),
 			horizontalAlignment = Alignment.CenterHorizontally
@@ -57,7 +50,14 @@ fun DashboardScreen(
 				//TODO: update uiState.recipes.recipes to be less confusing.
 				is DashboardUiState.Success -> DashboardBody(
 					recipes = uiState.recipes.recipes,
-					appState
+					appState,
+					getRecipe = {
+						coroutine.launch {
+							dashboardViewModel.getRecipes(it)
+						}
+					},
+					query = query.value,
+					updateQuery = { dashboardViewModel.changeName(it) }
 				)
 
 				is DashboardUiState.Loading -> LoadingScreen()
@@ -73,14 +73,22 @@ fun DashboardScreen(
 fun DashboardBody(
 	recipes: List<Recipe>,
 	appState: AppState,
+	getRecipe: (String) -> Unit,
+	query: String,
+	updateQuery: (String) -> Unit = {},
 ) {
-
-	LazyColumn(
-		contentPadding = PaddingValues(20.dp, 0.dp),
-		verticalArrangement = Arrangement.SpaceAround
-	) {
-		items(recipes) { recipe ->
-			RecipeCard(recipe = recipe, appState = appState)
+	Column(horizontalAlignment = Alignment.CenterHorizontally) {
+		RecipeSearchBar(
+			getRecipes = { getRecipe(it) },
+			query = query,
+			updateQuery = { updateQuery(it) })
+		LazyColumn(
+			contentPadding = PaddingValues(20.dp, 0.dp),
+			verticalArrangement = Arrangement.SpaceAround
+		) {
+			items(recipes) { recipe ->
+				RecipeCard(recipe = recipe, appState = appState)
+			}
 		}
 	}
 }

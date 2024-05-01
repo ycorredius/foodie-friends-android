@@ -31,7 +31,7 @@ class RecipeViewModel @Inject constructor(
 		}
 	}
 
-	suspend fun getRecipe(id: Int) {
+	private suspend fun getRecipe(id: Int) {
 		_uiState.value = RecipeDetailUiState.Loading
 		_uiState.value = try {
 			val result = recipeRepository.getRecipeDetails(id)
@@ -51,6 +51,12 @@ sealed interface RecipeDetailUiState {
 
 data class RecipeUiState(
 	var recipe: Recipe = Recipe(),
-	var error: String = ""
+	var error: String = "",
+	var user: UserRecipe
+)
+
+data class UserRecipe(
+	val userName: String,
+	val userPhoto: String,
 )
 

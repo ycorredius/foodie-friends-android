@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,8 +20,11 @@ class DiscoverViewModel @Inject constructor(
 ) : ViewModel() {
 
 	private val _uiState: MutableStateFlow<DiscoverRecipeUiState> =
-		MutableStateFlow<DiscoverRecipeUiState>(DiscoverRecipeUiState.Loading)
+		MutableStateFlow(DiscoverRecipeUiState.Loading)
 	val uiState: StateFlow<DiscoverRecipeUiState> = _uiState
+
+	private val _querySearch = MutableStateFlow("")
+	val querySearch: StateFlow<String> = _querySearch.asStateFlow()
 
 	init {
 		viewModelScope.launch {
@@ -38,6 +42,10 @@ class DiscoverViewModel @Inject constructor(
 		} else {
 			DiscoverRecipeUiState.Error(result.error)
 		}
+	}
+
+	fun changeName(name: String){
+		_querySearch.value = name
 	}
 }
 

@@ -14,16 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
-import coil.size.Size
 import com.example.foodiefriends.AppState
 import com.example.foodiefriends.R
 import com.example.foodiefriends.data.Recipe
@@ -33,7 +28,7 @@ import java.text.SimpleDateFormat
 @Composable
 fun RecipeCard(
 	recipe: Recipe,
-	appState: AppState,
+	appState: AppState
 ) {
 	// TODO: Update this to use a not-deprecated date parser
 	val updateDate = SimpleDateFormat("dd MMM, yyyy").format(recipe.attributes.updatedAt)
@@ -57,15 +52,7 @@ fun RecipeCard(
 				contentDescription = "Default Food image"
 			)
 		} else {
-			SubcomposeAsyncImage(
-				model = ImageRequest.Builder(LocalContext.current)
-					.data(recipe.attributes.jumboUrl)
-					.size(Size.ORIGINAL)
-					.crossfade(true)
-					.build(),
-				contentDescription = null,
-				contentScale = ContentScale.None
-			)
+			ImageComposable(url = recipe.attributes.jumboUrl)
 		}
 		Column(
 			modifier = Modifier.padding(20.dp, 5.dp),

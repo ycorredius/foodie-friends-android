@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.foodiefriends.AppState
 import com.example.foodiefriends.R
 import com.example.foodiefriends.TopBarRow
+import com.example.foodiefriends.data.LocalUser
 import com.example.foodiefriends.data.Recipe
 import com.example.foodiefriends.ui.NavigationDestination
 import com.example.foodiefriends.ui.reusables.ImageComposable
@@ -63,12 +64,15 @@ fun UserProfileScreen(
 		Column(modifier = Modifier.padding(padding)) {
 			val uiState = viewModel.uiState.collectAsState()
 			when (val user = uiState.value) {
-				MeUiState.Error -> TODO()
+				MeUiState.Error -> Text(text = "Shit just broke!")
 				MeUiState.Loading -> LoadingScreen()
-				is MeUiState.Success -> UserProfileBody(
-					user = user.me, recipes = user.recipes.recipes,
-					appState
-				)
+				is MeUiState.Success -> user.localUser?.let {
+					UserProfileBody(
+						user = it,
+						recipes = user.recipes.recipes,
+						appState
+					)
+				}
 			}
 		}
 	}
@@ -78,7 +82,7 @@ fun UserProfileScreen(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun UserProfileBody(
-	user: Me,
+	user: LocalUser,
 	recipes: List<Recipe>,
 	appState: AppState
 ) {
@@ -90,8 +94,8 @@ fun UserProfileBody(
 		horizontalArrangement = Arrangement.spacedBy(10.dp),
 		verticalAlignment = Alignment.Top
 	) {
-		if (user.avatarUrl.isNotEmpty()) {
-			ImageComposable(url = user.avatarUrl)
+		if (user.avatar?.isNotEmpty() == true) {
+			ImageComposable(url = user.avatar)
 		} else {
 			Image(
 				modifier = Modifier

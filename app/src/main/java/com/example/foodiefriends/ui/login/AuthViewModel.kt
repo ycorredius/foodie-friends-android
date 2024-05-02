@@ -33,9 +33,10 @@ class AuthViewModel @Inject constructor(
 		if (result?.isSuccessful == true) {
 			openAndPopUp(DashboardDestination.route, SignupDestination.route)
 		} else {
-			result?.body()?.let {
-				errors = it.error!!
-			}
+//			result?.body()?.let {
+//				errors = it.error!!
+//			}
+			//TODO: Refactor errors here
 		}
 	}
 

@@ -10,9 +10,6 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.example.foodiefriends.data.AuthRepository
 import com.example.foodiefriends.data.RecipeRepository
-import com.example.foodiefriends.data.UserRepository
-import com.example.foodiefriends.network.ApiClient
-import com.example.foodiefriends.network.AuthService
 import com.example.foodiefriends.network.RecipeService
 import dagger.Module
 import dagger.Provides
@@ -44,15 +41,9 @@ object FoodieFriendsModule {
 
 	@Provides
 	@Singleton
-	fun provideRecipeRepository(recipeService: RecipeService, @ApplicationContext context: Context): RecipeRepository =
-		RecipeRepository(recipeService, context)
-
-	@Provides
-	@Singleton
-	fun provideUserRepository(
-		dataStore: DataStore<Preferences>
-	): UserRepository{
-		return UserRepository(dataStore)
-	}
-
+	fun provideRecipeRepository(
+		recipeService: RecipeService,
+		authRepository: AuthRepository
+	): RecipeRepository =
+		RecipeRepository(recipeService, authRepository)
 }

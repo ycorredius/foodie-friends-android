@@ -7,7 +7,15 @@ data class UserResponse(
 	val token: String = "",
 	val user: User,
 	val errors: List<String> = emptyList()
-)
+) {
+	fun toLocalUser() = LocalUser(
+		token = token,
+		id = user.data.id,
+		name = user.data.attributes.name,
+		email = user.data.attributes.email,
+		avatar = user.data.attributes.avatar
+	)
+}
 
 data class User(
 	val data: UserData = UserData()

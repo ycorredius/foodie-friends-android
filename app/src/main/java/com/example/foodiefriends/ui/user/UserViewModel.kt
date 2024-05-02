@@ -1,11 +1,11 @@
 package com.example.foodiefriends.ui.user
 
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foodiefriends.data.AuthRepository
-import com.example.foodiefriends.data.Recipe
+import com.example.foodiefriends.data.LocalUser
 import com.example.foodiefriends.data.RecipeRepository
+import com.example.foodiefriends.printMsg
 import com.example.foodiefriends.ui.dashboard.RecipesUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
-	private val authRepository: AuthRepository,
-	private val recipeRepository: RecipeRepository
+	private val recipeRepository: RecipeRepository,
+	private val authRepository: AuthRepository
 ) : ViewModel() {
 
 	private val _uiState: MutableStateFlow<MeUiState> = MutableStateFlow(MeUiState.Loading)
@@ -28,21 +28,28 @@ class UserViewModel @Inject constructor(
 		}
 	}
 
-	private suspend fun initUserProfileScreen(){
+	private suspend fun initUserProfileScreen() {
 		_uiState.value = MeUiState.Loading
 		try {
-			_uiState.value = MeUiState.Success(
-				me = authRepository.getMe(),
-				recipes = recipeRepository.getUserRecipes()
-			)
-		} catch (e: Exception){
+			val user = authRepository.getLocalUser()
+			user.collect {
+				_uiState.value = it.let { localUser ->
+					MeUiState.Success(
+						localUser = localUser,
+						recipes = recipeRepository.getUserRecipes()
+					)
+				}
+			}
+
+		} catch (e: Exception) {
+			printMsg("@@@ Error happened: $e")
 			_uiState.value = MeUiState.Error
 		}
 	}
 }
 
 sealed interface MeUiState {
-	data class Success(val me: Me, val recipes: RecipesUiState) : MeUiState
+	data class Success(val localUser: LocalUser?, val recipes: RecipesUiState) : MeUiState
 	data object Loading : MeUiState
 	data object Error : MeUiState
 }

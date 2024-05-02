@@ -3,6 +3,7 @@ package com.example.foodiefriends.ui.recipe
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.foodiefriends.data.LocalUser
 import com.example.foodiefriends.data.Recipe
 import com.example.foodiefriends.data.RecipeRepository
 import com.example.foodiefriends.printMsg
@@ -52,7 +53,7 @@ sealed interface RecipeDetailUiState {
 data class RecipeUiState(
 	var recipe: Recipe = Recipe(),
 	var error: String = "",
-	var user: UserRecipe
+	var user: LocalUser = LocalUser()
 )
 
 data class UserRecipe(

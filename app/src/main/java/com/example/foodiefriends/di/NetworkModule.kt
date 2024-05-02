@@ -1,8 +1,6 @@
 package com.example.foodiefriends.di
 
 import android.content.Context
-import com.example.foodiefriends.data.AuthRepository
-import com.example.foodiefriends.data.UserRepository
 import com.example.foodiefriends.network.ApiClient
 import com.example.foodiefriends.network.AuthService
 import com.example.foodiefriends.network.RecipeService
@@ -18,6 +16,10 @@ import javax.inject.Singleton
 class NetworkModule {
 	@Provides
 	@Singleton
+	fun provideApiClient() = ApiClient()
+
+	@Provides
+	@Singleton
 	fun provideRecipeService(
 		@ApplicationContext context: Context,
 		apiClient: ApiClient
@@ -31,17 +33,4 @@ class NetworkModule {
 		apiClient: ApiClient
 	): AuthService =
 		AuthService.create(apiClient.getClient(context, false))
-
-	@Provides
-	@Singleton
-	fun provideApiClient() = ApiClient()
-
-	@Provides
-	@Singleton
-	fun provideAuthRepository(
-		authService: AuthService,
-		@ApplicationContext context: Context
-	): AuthRepository {
-		return AuthRepository(authService, context)
-	}
 }

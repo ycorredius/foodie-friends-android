@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.foodiefriends.AppState
 import com.example.foodiefriends.R
 import com.example.foodiefriends.TopBarRow
+import com.example.foodiefriends.data.LocalUser
 import com.example.foodiefriends.data.Recipe
 import com.example.foodiefriends.ui.NavigationDestination
 import com.example.foodiefriends.ui.reusables.ImageComposable
@@ -69,13 +70,13 @@ fun RecipeBody(
 
 @Composable
 fun RecipeDataSource(
-	user: UserRecipe
+	user: LocalUser
 ) {
 	Row(
 		verticalAlignment = Alignment.CenterVertically
 	) {
-		if (user.userPhoto.isNotEmpty()) {
-			ImageComposable(url = user.userPhoto)
+		if (user.avatar?.isNotEmpty() == true) {
+			ImageComposable(url = user.avatar)
 		} else {
 			Image(
 				modifier = Modifier
@@ -85,7 +86,7 @@ fun RecipeDataSource(
 				contentDescription = "Default user profile",
 			)
 		}
-		Text(text = user.userName, fontSize = 18.sp)
+		Text(text = user.name, fontSize = 18.sp)
 	}
 }
 

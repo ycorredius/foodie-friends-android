@@ -3,6 +3,7 @@ plugins {
 	id("org.jetbrains.kotlin.android")
 	kotlin("kapt")
 	id("com.google.dagger.hilt.android")
+	id("com.google.devtools.ksp")
 }
 
 android {
@@ -52,7 +53,7 @@ android {
 }
 
 dependencies {
-
+	val room_version = "2.6.1"
 	implementation("androidx.core:core-ktx:1.12.0")
 	implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 	implementation("androidx.activity:activity-compose:1.8.2")
@@ -78,7 +79,7 @@ dependencies {
 	implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
 	implementation("com.squareup.retrofit2:retrofit:2.11.0")
 	implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-
+	//okhttp dependencies
 	implementation("androidx.security:security-crypto:1.0.0")
 	implementation("com.squareup.okhttp3:okhttp:4.12.0")
 	implementation ("com.squareup.okhttp3:logging-interceptor:4.12.0")
@@ -88,6 +89,11 @@ dependencies {
 
 	//Coil image loader
 	implementation("io.coil-kt:coil-compose:2.6.0")
+
+	//roomdata dependencies
+	implementation("androidx.room:room-runtime:$room_version")
+	ksp("androidx.room:room-compiler:$room_version")
+	implementation("androidx.room:room-ktx:$room_version")
 
 	testImplementation("junit:junit:4.13.2")
 	androidTestImplementation("androidx.test.ext:junit:1.1.5")

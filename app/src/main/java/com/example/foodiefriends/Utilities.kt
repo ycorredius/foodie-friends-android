@@ -13,9 +13,7 @@ private val masterKey = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
 fun master() = masterKey
 object Key{
 	const val accessToken = "accessToken"
-	const val userName = "userName"
-	const val userEmail = "userEmail"
-	const val userPhoto = "userPhoto"
+	const val userId = "userId"
 }
 
 fun sharedPrefs(context: Context): SharedPreferences {
@@ -66,8 +64,10 @@ private fun createPrefs(context: Context): SharedPreferences{
 }
 
 fun SharedPreferences.putString(key: String, value: String) = edit().putString(key,value).apply()
+fun SharedPreferences.putInt(key:String, value: Int) = edit().putInt(key,value).apply()
 
 fun SharedPreferences.string(key: String) = getString(key,"").orEmpty()
+fun SharedPreferences.int(key: String) = getInt(key,0)
 
 const val TAG = "FF"
 

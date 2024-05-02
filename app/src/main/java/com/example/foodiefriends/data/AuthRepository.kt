@@ -4,13 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.example.foodiefriends.Key
+import com.example.foodiefriends.data.repo.UserRepository
+import com.example.foodiefriends.int
 import com.example.foodiefriends.network.AuthService
-import com.example.foodiefriends.printMsg
+import com.example.foodiefriends.putInt
 import com.example.foodiefriends.putString
 import com.example.foodiefriends.sharedPrefs
-import com.example.foodiefriends.string
-import com.example.foodiefriends.ui.user.Me
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 import retrofit2.Response
 import javax.inject.Inject
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class AuthRepository @Inject constructor(
 	private val authService: AuthService,
 	@ApplicationContext context: Context,
-	private val sharedPrefs: SharedPreferences = sharedPrefs(context)
+	private val sharedPrefs: SharedPreferences = sharedPrefs(context),
+	private val userRepository: UserRepository
 ) {
 	// TODO: Figure out how throw a proper error
 	suspend fun loginUser(email: String, password: String): Response<UserResponse>? {
@@ -27,17 +29,14 @@ class AuthRepository @Inject constructor(
 			if (response.isSuccessful) {
 				response.body()?.let {
 					sharedPrefs.putString(Key.accessToken, it.token)
-					it.user.data.attributes.avatar?.let { avatarUrl ->
-						sharedPrefs.putString(
-							Key.userPhoto,
-							avatarUrl
-						)
+					sharedPrefs.putInt(Key.userId, it.user.data.id)
+					val user = userRepository.getUser(it.user.data.id)
+					user.collect { localUser ->
+						if (localUser == null) {
+							userRepository.insertUser(it.toLocalUser())
+						}
 					}
-					sharedPrefs.putString(Key.userName, it.user.data.attributes.name)
-					sharedPrefs.putString(Key.userEmail, it.user.data.attributes.email)
 				}
-			} else {
-				printMsg("@@@@ Something went wrong with the request: $response.")
 			}
 			response
 		} catch (e: HttpException) {
@@ -48,12 +47,14 @@ class AuthRepository @Inject constructor(
 	}
 
 	// TODO: Figure out how throw a proper error
-	suspend fun signUpUser(email: String, password: String): Response<JWT>? {
+	suspend fun signUpUser(email: String, password: String): Response<UserResponse>? {
 		return try {
 			val response = authService.signUpUser(Auth(email, password))
 			if (response.isSuccessful) {
-				response.body()?.token?.let {
-					response.body()?.token?.let { sharedPrefs.putString(Key.accessToken, it) }
+				response.body()?.let { resp ->
+					resp.token.let { sharedPrefs.putString(Key.accessToken, it) }
+					resp.user.data.id.let { sharedPrefs.putInt(Key.userId, it) }
+					resp.toLocalUser().let { user -> userRepository.insertUser(user) }
 				}
 			}
 			response
@@ -63,17 +64,14 @@ class AuthRepository @Inject constructor(
 		}
 	}
 
-	fun getMe(): Me {
-		return Me(
-			name = sharedPrefs.string(Key.userName),
-			avatarUrl = sharedPrefs.string(Key.userPhoto)
-		)
+	//TODO: I need to change where this is located. Possibly create a repo that specifically deals with status items.
+	//This repo should only handle authenticatin transactions i.e. login, signup, log
+	fun getLocalUser(): Flow<LocalUser?> {
+		val id = sharedPrefs.int(Key.userId)
+		return userRepository.getUser(id)
 	}
 
 	fun logout() {
 		sharedPrefs.putString(Key.accessToken, "")
-		sharedPrefs.putString(Key.userPhoto, "")
-		sharedPrefs.putString(Key.userName, "")
-		sharedPrefs.putString(Key.userEmail, "")
 	}
 }

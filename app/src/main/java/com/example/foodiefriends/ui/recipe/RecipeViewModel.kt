@@ -56,8 +56,3 @@ data class RecipeUiState(
 	var user: RecipeUser = RecipeUser()
 )
 
-data class UserRecipe(
-	val userName: String,
-	val userPhoto: String,
-)
-

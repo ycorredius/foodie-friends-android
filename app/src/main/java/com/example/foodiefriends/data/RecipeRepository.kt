@@ -7,14 +7,10 @@ import com.example.foodiefriends.printMsg
 import com.example.foodiefriends.ui.Errors
 import com.example.foodiefriends.ui.dashboard.RecipesUiState
 import com.example.foodiefriends.ui.recipe.RecipeUiState
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class RecipeRepository(
 	private val recipeService: RecipeService,
-	private val authRepository: AuthRepository
 ) {
-	private var recipeData: MutableStateFlow<Recipe> = MutableStateFlow(Recipe())
-
 	// TODO: Figure out best way to cache recipes in order not to call too many times.
 	// TODO: Implement a service that saves recipes to server and local db.
 	suspend fun getUserRecipes(name: String = ""): RecipesUiState {

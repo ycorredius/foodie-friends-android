@@ -43,7 +43,6 @@ object FoodieFriendsModule {
 	@Singleton
 	fun provideRecipeRepository(
 		recipeService: RecipeService,
-		authRepository: AuthRepository
 	): RecipeRepository =
 		RecipeRepository(recipeService)
 }

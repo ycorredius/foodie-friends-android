@@ -24,18 +24,12 @@ class AuthRepository @Inject constructor(
 ) {
 	// TODO: Figure out how throw a proper error
 	suspend fun loginUser(email: String, password: String): Response<UserResponse>? {
+		val response = authService.loginUser(Auth(email, password))
 		return try {
-			val response = authService.loginUser(Auth(email, password))
 			if (response.isSuccessful) {
 				response.body()?.let {
 					sharedPrefs.putString(Key.accessToken, it.token)
 					sharedPrefs.putInt(Key.userId, it.user.data.id)
-					val user = userRepository.getUser(it.user.data.id)
-					user.collect { localUser ->
-						if (localUser == null) {
-							userRepository.insertUser(it.toLocalUser())
-						}
-					}
 				}
 			}
 			response

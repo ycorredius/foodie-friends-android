@@ -3,19 +3,15 @@ package com.example.foodiefriends.ui.user
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
@@ -28,8 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,8 +34,8 @@ import com.example.foodiefriends.TopBarRow
 import com.example.foodiefriends.data.LocalUser
 import com.example.foodiefriends.data.Recipe
 import com.example.foodiefriends.ui.NavigationDestination
-import com.example.foodiefriends.ui.reusables.ImageComposable
 import com.example.foodiefriends.ui.reusables.LoadingScreen
+import com.example.foodiefriends.ui.reusables.ProfilePhoto
 import com.example.foodiefriends.ui.reusables.RecipeCard
 import kotlinx.coroutines.launch
 
@@ -92,23 +86,13 @@ fun UserProfileBody(
 	Row(
 		modifier = Modifier.padding(20.dp),
 		horizontalArrangement = Arrangement.spacedBy(10.dp),
-		verticalAlignment = Alignment.Top
+		verticalAlignment = Alignment.CenterVertically
 	) {
-		if (user.avatar?.isNotEmpty() == true) {
-			ImageComposable(url = user.avatar)
-		} else {
-			Image(
-				modifier = Modifier
-					.clip(CircleShape)
-					.size(100.dp),
-				painter = painterResource(id = R.drawable.default_profile_photo),
-				contentDescription = "Default Food image",
-			)
-		}
+		ProfilePhoto(url = user.avatar)
 		Text(
 			text = user.name,
-			fontSize = 24.sp,
-			fontWeight = FontWeight.SemiBold
+			fontSize = 20.sp,
+			fontWeight = FontWeight.Medium
 		)
 	}
 	Row(
@@ -143,10 +127,11 @@ fun UserProfileBody(
 	}
 	HorizontalPager(
 		state = pagerState,
-		modifier = Modifier
-			.fillMaxWidth()
 	) {
-		Box {
+		Column(
+			horizontalAlignment = Alignment.CenterHorizontally,
+			modifier = Modifier.fillMaxWidth()
+		) {
 			if (selectedTabIndex.value == 0) {
 				UserRecipes(
 					recipes = recipes,
@@ -165,7 +150,7 @@ fun UserRecipes(
 	recipes: List<Recipe>,
 	appState: AppState
 ) {
-	LazyColumn {
+	LazyColumn() {
 		items(recipes) {
 			//TODO: This works great but I don't like the way it looks on screen.
 			RecipeCard(recipe = it, appState)

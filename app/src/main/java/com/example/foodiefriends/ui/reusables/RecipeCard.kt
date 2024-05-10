@@ -46,14 +46,7 @@ fun RecipeCard(
 		),
 		colors = CardDefaults.cardColors()
 	) {
-		if (recipe.attributes.thumbnailUrl.isNullOrEmpty() || recipe.attributes.thumbnailUrl.isEmpty()) {
-			Image(
-				painter = painterResource(id = R.drawable.default_food),
-				contentDescription = "Default Food image"
-			)
-		} else {
-			ImageComposable(url = recipe.attributes.jumboUrl)
-		}
+		RecipeCardImage(url = recipe.attributes.jumboUrl)
 		Column(
 			modifier = Modifier.padding(20.dp, 5.dp),
 			verticalArrangement = Arrangement.spacedBy(2.dp)

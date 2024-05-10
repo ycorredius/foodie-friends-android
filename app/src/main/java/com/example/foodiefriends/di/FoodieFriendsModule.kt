@@ -45,5 +45,5 @@ object FoodieFriendsModule {
 		recipeService: RecipeService,
 		authRepository: AuthRepository
 	): RecipeRepository =
-		RecipeRepository(recipeService, authRepository)
+		RecipeRepository(recipeService)
 }

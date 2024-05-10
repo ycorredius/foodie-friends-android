@@ -1,6 +1,7 @@
 package com.example.foodiefriends.data
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serial
 import java.util.Date
 
 data class RecipeListResponse(
@@ -8,7 +9,8 @@ data class RecipeListResponse(
 )
 
 data class RecipeResponse(
-	val data: Recipe = Recipe()
+	val data: Recipe = Recipe(),
+	val included: List<Ingredient>
 )
 
 //TODO: remap attributes
@@ -18,7 +20,8 @@ data class Recipe(
 )
 
 data class RecipeRelationships(
-	val ingredients: List<Ingredient> = emptyList(),
+	@SerializedName("included")
+	val included: List<Ingredient>? = emptyList(),
 )
 
 data class RecipeAttributes(
@@ -39,6 +42,8 @@ data class RecipeAttributes(
 	val thumbnailUrl: String? = "",
 	@SerializedName("jumbo_url")
 	val jumboUrl: String? = "",
+	@SerializedName("user_avatar")
+	val userAvatar: String? = "",
 	val user: RecipeUser = RecipeUser(),
 	@SerializedName("updated_at")
 	val updatedAt: Date = Date()

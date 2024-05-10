@@ -44,7 +44,6 @@ class RecipeRepository(
 					recipeResponse.data?.let { recipeUiState.recipes = it }
 				}
 			}
-			printMsg("@@@ Result Body: ${results.body()?.data}")
 			recipeUiState
 		} catch (e: Exception) {
 			recipeUiState.error = handleError(e)
@@ -54,17 +53,15 @@ class RecipeRepository(
 
 	//TODO: I'm not sure what I amd doing here but I know it wrong.
 	suspend fun getRecipeDetails(id: Int): RecipeUiState {
-		val user = authRepository.getLocalUser()
 		val recipeUiState = RecipeUiState()
-		user.collect {
-			it?.let { user -> RecipeUiState(user = user) }
-		}
 		return try {
 			val result = recipeService.getRecipeDetails(id)
 			if (result.isSuccessful) {
 				printMsg("@@@ Recipe wasn't found.")
 				result.body()?.let {
 					recipeUiState.recipe = it.data
+					recipeUiState.ingredients = it.included
+					recipeUiState.user = it.data.attributes.user
 				}
 			}
 			recipeUiState

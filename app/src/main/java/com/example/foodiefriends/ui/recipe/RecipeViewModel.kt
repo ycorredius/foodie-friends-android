@@ -3,10 +3,10 @@ package com.example.foodiefriends.ui.recipe
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.foodiefriends.data.LocalUser
+import com.example.foodiefriends.data.Ingredient
 import com.example.foodiefriends.data.Recipe
 import com.example.foodiefriends.data.RecipeRepository
-import com.example.foodiefriends.printMsg
+import com.example.foodiefriends.data.RecipeUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +38,6 @@ class RecipeViewModel @Inject constructor(
 			val result = recipeRepository.getRecipeDetails(id)
 			RecipeDetailUiState.Success(result)
 		} catch (e: Exception) {
-			printMsg("@@@ Something has gone wrong in recipeveiwmodel: $e")
 			RecipeDetailUiState.Error
 		}
 	}
@@ -52,8 +51,9 @@ sealed interface RecipeDetailUiState {
 
 data class RecipeUiState(
 	var recipe: Recipe = Recipe(),
+	var ingredients: List<Ingredient> = emptyList<Ingredient>(),
 	var error: String = "",
-	var user: LocalUser = LocalUser()
+	var user: RecipeUser = RecipeUser()
 )
 
 data class UserRecipe(

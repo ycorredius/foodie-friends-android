@@ -1,7 +1,6 @@
 package com.example.foodiefriends.data
 
 import com.google.gson.annotations.SerializedName
-import java.io.Serial
 import java.util.Date
 
 data class RecipeListResponse(

@@ -5,9 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,9 +29,6 @@ fun RecipeCard(
 	recipe: Recipe,
 	appState: AppState
 ) {
-	// TODO: Update this to use a not-deprecated date parser
-	val updateDate = SimpleDateFormat("dd MMM, yyyy").format(recipe.attributes.updatedAt)
-
 	ElevatedCard(
 		modifier = Modifier
 			.background(Color.Transparent)
@@ -70,15 +65,5 @@ fun RecipeCard(
 				softWrap = true
 			)
 		}
-	}
-}
-
-@Composable
-fun UserRecipeCard(
-	recipe: Recipe,
-	appState: AppState
-) {
-	Card(onClick = { appState.navController.navigate("recipe/${recipe.attributes.id}") }) {
-
 	}
 }
